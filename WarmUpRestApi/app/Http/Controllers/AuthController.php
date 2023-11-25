@@ -20,7 +20,7 @@ class AuthController extends Controller
         if (!Auth::attempt($request->only("email", "password"))) {
             return $this->Err('', "You Are A Liar", 401);
         }
-        $user = User::where('email',$request->email)->first();
+        $user = User::where('email', $request->email)->first();
         return $this->Ok([
             'user' => $user,
             'token' => $user->createToken('Token' . $user->name)->plainTextToken,
@@ -42,8 +42,9 @@ class AuthController extends Controller
     }
     public function logout()
     {
-        return response()->json([
-            'hehe' => 'bye bye'
-        ], 200);
+        Auth::user()->currentAccessToken()->delete();
+        return $this->Ok([
+            'message' => 'Your Membership has been revoken by your will. Leave Traitor, LEAVE',
+        ]);
     }
 }

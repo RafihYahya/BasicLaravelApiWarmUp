@@ -20,3 +20,8 @@ UPDATE users SET id = 1 WHERE id = 3;
 DELETE FROM users WHERE id = 2;
 
 --
+--@block
+
+DELETE FROM personal_access_tokens WHERE id = 1 ;
+--
+

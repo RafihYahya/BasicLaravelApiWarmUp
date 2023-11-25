@@ -42,36 +42,38 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      */
-    
+
     public function show(Tasks $task)
     {
-        if (Auth::user()->id == $task->user_id) {
-            return $this->Err('','You Are a Thief',403);
-        }
-        return new TaskRessource($task);
+        $this->isNotAuthorized($task) ? $this->isNotAuthorized($task) : new TaskRessource($task);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Tasks $task)
     {
-        //
+        if (Auth::user()->id == $task->user_id) {
+            return $this->Err('', 'You Are a Thief', 403);
+        }
+        $task->update($request->all());
+        return new TaskRessource($task);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Tasks $task)
     {
-        //
+        $this->isNotAuthorized($task) ? $this->isNotAuthorized($task) : $task->delete();
+
+    }
+
+    private function isNotAuthorized($task)
+    {
+        if (Auth::user()->id == $task->user_id) {
+            return $this->Err('', 'You Are a Thief', 403);
+        }
     }
 }
